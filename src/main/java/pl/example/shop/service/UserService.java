@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.example.shop.domain.User;
 import pl.example.shop.repository.UserRepository;
@@ -14,9 +15,13 @@ import java.util.List;
 public class UserService {
 
     @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
     private UserRepository userRepository;
 
     public User creteUser(User user){
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -37,6 +42,8 @@ public class UserService {
         return userRepository.findAll(pageable);
     }
 
+
+
     public User update(User user) throws Exception {
         return userRepository.findById(user.getId()).map(u -> {
             if(!u.getName().equals(user.getName())){
@@ -47,19 +54,26 @@ public class UserService {
             }
             return userRepository.save(u);
 
-            }).orElseThrow(()->new Exception("Brak danych"));
+        }).orElseThrow(()->new Exception("Brak danych"));
     }
+
+
+
+  /*  public User update(User user) throws Exception {
+        return userRepository.findById(user.getId()).map(u -> {
+            if(!u.getName().equals(user.getName())){
+                u.setName(user.getName());
+            }
+            if(!u.getSurname().equals(user.getSurname())){
+                u.setSurname(user.getSurname());
+            }
+            return userRepository.save(u);
+
+            }).orElseThrow(()->new Exception("Brak danych"));
+    } */
+
+
 }
 
 //Jave, Intelillij, Maven, git, postman, doker i dokercompose
 
-    //User inbound = ... User existing = userRepository.findByFirstname(inbound.getFirstname());
-// if(existing != null) inbound.setId(existing.getId());
-// userRepository.save(inbound);
-
-
-
-    //public void updateLaserDataByHumanId(String replacement, String humanId)
-// { List<LaserData> laserDataByHumanId = laserDataRepository.findByHumanId(humanId);
-// laserDataByHumanId.stream() .map(en -> en.setHumanId(replacement))
-// .collect(Collectors.toList()) .forEach(en -> laserDataRepository.save(en)); }

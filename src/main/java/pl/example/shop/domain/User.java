@@ -13,13 +13,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Table
+@Table(name="users")
 @EntityListeners(AuditingEntityListener.class)
 public class User {
 
@@ -32,6 +33,9 @@ public class User {
     private String name;
     @NotNull(message = "Field surname is required")
     private String surname;
+    @NotNull(message = "Password is empty")
+    @Length(min=5, max=30, message = "Password is min 5 and max 30")
+    private String password;
     @NotNull(message = "Field email is required")
     @Email(message = "Email is invalid")
     @Column(unique = true)
@@ -39,6 +43,10 @@ public class User {
     @Min(value = 12, message = "Your age is not be younger 12")
     @Max(value = 100, message = "Your age is not be older 100")
     private Integer age;
+
+    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<Role> roles;
 
     @CreatedDate
     private LocalDateTime createDate;
