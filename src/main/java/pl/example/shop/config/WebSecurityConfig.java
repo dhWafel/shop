@@ -23,7 +23,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors()
                 .and()
                 .csrf()
-                .ignoringAntMatchers("/login")
+                .ignoringAntMatchers("/**")
                 .and()
                 .headers()
                 .frameOptions()
