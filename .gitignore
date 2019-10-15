@@ -82,7 +82,7 @@ local.properties
 # since they will be recreated, and may cause churn. Uncomment if using
 # auto-import.
 
- #*.iml
+ *.iml
 # *.ipr
 
 # CMake
@@ -94,7 +94,7 @@ cmake-build-*/
 *.iws
 
 # IntelliJ
-#.idea/
+.idea/
 out/
 
 
@@ -155,7 +155,7 @@ buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 .flattened-pom.xml
-#mvnw*
+mvnw*
 
 ### OSX ###
 # General
