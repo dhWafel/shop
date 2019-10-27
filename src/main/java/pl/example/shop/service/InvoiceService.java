@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pl.example.shop.domain.ClientOrder;
 import pl.example.shop.domain.Invoice;
@@ -56,8 +57,9 @@ public class InvoiceService {
         return invoiceRepository.save(invoice);
     }
 
-    public Page<Invoice> findByIdUser(Long id, @PageableDefault Pageable pageable) {
-        return invoiceRepository.findByUserId(id, pageable);
+    public Page<Invoice> findByUserEmail(@PageableDefault Pageable pageable) {
+        String getEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        return invoiceRepository.findByUserEmail(getEmail, pageable);
     }
 
     public HSSFWorkbook generateInvoice(String orderNumber) {

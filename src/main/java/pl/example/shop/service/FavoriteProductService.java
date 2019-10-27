@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.expression.SecurityExpressionRoot;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pl.example.shop.domain.FavoriteProduct;
 import pl.example.shop.domain.Product;
@@ -28,12 +30,13 @@ public class FavoriteProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public FavoriteProduct addFavoriteProducts(Long userId, Long productId) {
+    public FavoriteProduct addFavoriteProducts(Long productId) {
 
+        String getEmail = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        return favoriteProductRepository.findByUserIdAndProductId(userId, productId)
+        return favoriteProductRepository.findByUserEmailAndProductId(getEmail, productId)
                 .orElseGet(() -> {
-                    Optional<User> u = userRepository.findById(userId);
+                    Optional<User> u = userRepository.findByEmail(getEmail);
 
                     if (u.isPresent()) {
                         Optional<Product> p = productRepository.findById(productId);
@@ -43,13 +46,13 @@ public class FavoriteProductService {
                                     .product(p.get())
                                     .build());
                         } else throw new EntityNotFoundException("Product " + productId + "dosen't exist");
-                    } else throw new EntityNotFoundException("User " + userId + "dosen't exist");
+                    } else throw new EntityNotFoundException("User dosen't exist");
                 });
     }
 
-    public Page<FavoriteProduct> showFavoriteProductList(Long userId, @PageableDefault Pageable pageable) {
-
-        return favoriteProductRepository.findByUserId(userId, pageable);
+    public Page<FavoriteProduct> showFavoriteProductList(@PageableDefault Pageable pageable) {
+        String getEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        return favoriteProductRepository.findByUserEmail( getEmail, pageable);
     }
 
     public void deleteFavoriteProduct(Long favoriteProductId) {

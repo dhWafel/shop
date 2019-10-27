@@ -10,5 +10,5 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
     Invoice findByOrderNumber(String orderNumber);
 
-    Page<Invoice> findByUserId(Long id, Pageable pageable);
+    Page<Invoice> findByUserEmail(String email, Pageable pageable);
 }

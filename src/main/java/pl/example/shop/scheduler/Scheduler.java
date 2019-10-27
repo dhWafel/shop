@@ -1,4 +1,4 @@
-package pl.example.shop.domain;
+package pl.example.shop.scheduler;
 
 
 import org.springframework.scheduling.annotation.Scheduled;
@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class Scheduler {
 
-    @Scheduled(fixedRate = 10000)
+    //@Scheduled(fixedRate = 10000)
     public void scheduler(){
         System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 

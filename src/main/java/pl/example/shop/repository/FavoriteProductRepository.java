@@ -12,6 +12,7 @@ public interface FavoriteProductRepository extends JpaRepository<FavoriteProduct
 
     Optional<FavoriteProduct> findByUserIdAndProductId(Long userId, Long productId);
 
-    Page<FavoriteProduct> findByUserId(Long userId, Pageable pageable);
+    Page<FavoriteProduct> findByUserEmail(String email, Pageable pageable);
 
+    Optional<FavoriteProduct> findByUserEmailAndProductId(String email, Long productId);
 }

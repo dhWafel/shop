@@ -4,6 +4,7 @@ package pl.example.shop.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pl.example.shop.domain.Basket;
 import pl.example.shop.domain.ClientOrder;
@@ -23,8 +24,8 @@ public class ClientOrderService {
     private BasketRepository basketRepository;
 
 
-    public List<ClientOrder> createOrder(Long id) {
-        List<Basket> baskets = basketRepository.findByUserId(id);
+    public List<ClientOrder> createOrder() {
+        List<Basket> baskets = basketRepository.findByUserEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 
         String orderId = UUID.randomUUID().toString();
 
@@ -63,9 +64,7 @@ public class ClientOrderService {
         return clientOrderRepository.findAll(pageable);
     }
 
-    public Page<ClientOrder> getOrderByIdUser(Long id, Pageable pageable) throws Exception {
-        return clientOrderRepository.findByUserId(id, pageable);
+    public Page<ClientOrder> getOrderByIdUser(Pageable pageable) throws Exception {
+        return clientOrderRepository.findByUserEmail(SecurityContextHolder.getContext().getAuthentication().getName(), pageable);
     }
-
-
 }

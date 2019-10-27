@@ -34,7 +34,7 @@ public class User {
     @NotNull(message = "Field surname is required")
     private String surname;
     @NotNull(message = "Password is empty")
-    @Length(min=5, max=30, message = "Password is min 5 and max 30")
+    @Length(min=5, max=255, message = "Password is min 5 and max 30")
     private String password;
     @NotNull(message = "Field email is required")
     @Email(message = "Email is invalid")

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pl.example.shop.domain.Basket;
 import pl.example.shop.domain.Product;
@@ -48,7 +49,8 @@ public class BasketService {
     }
 
     public Page<Basket> basketPage(@PageableDefault Pageable pageable) {
-        return basketRepository.findAll(pageable);
+        String getEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        return basketRepository.findByUserEmail(getEmail, pageable);
     }
 
     public Basket update(Basket basket) throws Exception {
@@ -68,10 +70,3 @@ public class BasketService {
         }).orElseThrow(()->new Exception("No data"));
     }
 }
-
-
-//obiekt order przechowywuje to co w basket plus ordernumber
-//repozitory, service, controller
-//w repozitory basket znajd wszystkie obiekty basket dla uzytkownika o podanym id
-//w sevice wywolac ta funkcje i funkcje update wszystkie produkty minus quantity zanowionego przez uzytkownika
-//zapisujesz order w bazie danych i usuwasz wszytkie elementy z basket dla uzytkownika o podanym id

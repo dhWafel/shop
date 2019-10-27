@@ -2,13 +2,16 @@ package pl.example.shop.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.example.shop.domain.Basket;
 import pl.example.shop.service.BasketService;
 
 import java.util.List;
 
+@PreAuthorize("isAuthenticated()")              //funkcja z klasy SecurityExpressionRoot sprawdza czy uzytkownik jest zalogowany
 @RestController
 @RequestMapping("/api/basket")
 public class BasketController {
@@ -16,6 +19,7 @@ public class BasketController {
     @Autowired
     private BasketService basketService;
 
+    @PreAuthorize("hasRole('ADMIN')")           //funkcja z klasy SecurityExpressionRoot sprawdza czy użytkownik jest role admine
     @GetMapping("/list")                //zwraca cala liste basket
     public List<Basket> getListBasket(){
         return basketService.getAllBasket();
@@ -36,9 +40,9 @@ public class BasketController {
         basketService.deleteById(id);
     }
 
-    @GetMapping                         //zwraca liste basket ale pogrupowana tzn stronami (page)
-    public Page<Basket> basketPage(Pageable pageable){
-        return basketService.basketPage(pageable);
+    @GetMapping                         //zwraca liste przedmiotów dla użytkownika z basketu ale pogrupowana tzn stronami (page)
+    public Page<Basket> basketPage(@RequestParam Integer page, @RequestParam Integer size){
+        return basketService.basketPage(PageRequest.of(page, size));
     }
 
     @PutMapping

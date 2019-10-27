@@ -12,4 +12,6 @@ public interface ClientOrderRepository extends JpaRepository<ClientOrder, Long> 
     Page<ClientOrder> findByUserId(Long id, Pageable pageable);
 
     List<ClientOrder> findByOrderNumber(String orderNumber);
+
+    Page<ClientOrder> findByUserEmail(String email, Pageable pageable);
 }

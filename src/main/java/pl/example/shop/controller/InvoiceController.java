@@ -4,10 +4,11 @@ import javassist.NotFoundException;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.example.shop.domain.Invoice;
 import pl.example.shop.service.InvoiceService;
@@ -15,7 +16,7 @@ import pl.example.shop.service.InvoiceService;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-
+@PreAuthorize("isAuthenticated()")
 @RestController
 @RequestMapping("/api/invoice")
 public class InvoiceController {
@@ -46,13 +47,10 @@ public class InvoiceController {
         return new ResponseEntity<>(bytes, headers, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public Page<Invoice> showInvoice(@PathVariable Long id, Pageable pageable) {
-        return invoiceService.findByIdUser(id, pageable);
+    @GetMapping
+    public Page<Invoice> showInvoice(@RequestParam Integer page, @RequestParam Integer size) {
+        return invoiceService.findByUserEmail(PageRequest.of(page, size));
     }
 
 
 }
-
-//favourites product dodawanie(unikalne, usuwanie (domain, service controller, repository)
-//pozamieniawszystkie listy na page (tylko gety)

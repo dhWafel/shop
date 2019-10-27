@@ -7,8 +7,11 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.example.shop.domain.User;
+import pl.example.shop.repository.RoleRepository;
 import pl.example.shop.repository.UserRepository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -20,8 +23,12 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     public User creteUser(User user){
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
         return userRepository.save(user);
     }
 
