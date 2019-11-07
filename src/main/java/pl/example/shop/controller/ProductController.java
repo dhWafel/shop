@@ -32,7 +32,7 @@ public class ProductController {
         return productService.getAllProduct();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public Product createProduct(@RequestBody Product product) {
         return productService.createProduct(product);

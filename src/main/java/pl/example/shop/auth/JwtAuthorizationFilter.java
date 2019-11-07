@@ -42,7 +42,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         String authorities = claims.get("authorities", String.class);
 
         List<SimpleGrantedAuthority> simpleGrantedAuthorities = new ArrayList<>();
-        if (authorities == null && authorities.isEmpty()) {
+        if (authorities != null && !authorities.isEmpty()) {
             simpleGrantedAuthorities = Arrays
                     .stream(authorities.split(","))
                     .map(SimpleGrantedAuthority::new)
